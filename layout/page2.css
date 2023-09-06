@@ -1,0 +1,26 @@
+#section-main {
+    background: linear-gradient(135deg, #dda8a8, #b84e47);
+    width: 1000px;
+    height: 600px;
+    position: relative;
+}
+
+#img-box1, #img-box2 {
+    width: 450px;
+    height: 350px;
+    background-color: rgb(236, 236, 236);
+    box-shadow: 0 0 18px #353232;
+    border-radius: 10px;
+    padding: 1em;
+    position: absolute;
+}
+
+#img-box1 {
+    top: 30px;
+    left: 40px;
+}
+
+#img-box2 {
+    bottom: 30px;
+    right: 40px;
+}

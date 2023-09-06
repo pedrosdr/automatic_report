@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#img-box img, #img-box1 img, #img-box2 img {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+}
