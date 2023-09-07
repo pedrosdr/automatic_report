@@ -3,6 +3,9 @@ library(dplyr)
 library(ggplot2)
 library(webshot)
 library(htmlwidgets)
+library(jpeg)
+library(raster)
+library(qpdf)
 
 setwd('C:/Users/Lenovo/Desktop/automation')
 
@@ -17,13 +20,16 @@ df <- data.frame(
 # creating charts
 chart1 = df %>% ggplot(aes(x = x, y = y)) +
   geom_col(fill = '#6666ff')
+chart1
 
 chart2 = df %>% ggplot(aes(x = x, y = y)) +
   geom_line(color = '#ff6666', size = 2)
+chart2
 
 chart3 = df %>% ggplot(aes(x = x, y = y)) +
   geom_col(aes(x = x, y = y), fill = '#66ff66') +
   geom_point(color = '#ff6666', size = 8)
+chart3
 
 # creating map
 icons = icons(
@@ -36,7 +42,8 @@ icons = icons(
 
 map = leaflet(df) %>% addTiles() %>%
   addMarkers(~lon, ~lat, icon = icons)
-  
+map
+
 # saving charts
 ggsave('charts/chart1.jpg', chart1, units = c('px'), width = 1400, height = 1200)
 ggsave('charts/chart2.jpg', chart2, units = c('px'), width = 1400, height = 1200)
@@ -47,6 +54,29 @@ saveWidget(map, 'maps/map.html')
 webshot('maps/map.html', 'charts/map.jpg')
 
 # saving pages
-webshot('layout/page1.html', 'layout/img/page1.jpg', cliprect = c(0, 0, 1000, 600))
-webshot('layout/page2.html', 'layout/img/page2.jpg', cliprect = c(0, 0, 1000, 600))
-webshot('layout/page3.html', 'layout/img/page3.jpg', cliprect = c(0, 0, 1000, 600))
+width = 1000
+height = 600
+webshot('layout/page1.html', 'layout/img/page1.jpg', cliprect = c(0, 0, width, height))
+webshot('layout/page2.html', 'layout/img/page2.jpg', cliprect = c(0, 0, width, height))
+webshot('layout/page3.html', 'layout/img/page3.jpg', cliprect = c(0, 0, width, height))
+
+pdf('layout/pdf/page1.pdf', width = width/300, height = height/300)
+img = brick('layout/img/page1.jpg')
+plotRGB(img)
+dev.off()
+
+pdf('layout/pdf/page2.pdf', width = width/300, height = height/300)
+img = brick('layout/img/page2.jpg')
+plotRGB(img)
+dev.off()
+
+pdf('layout/pdf/page3.pdf', width = width/300, height = height/300)
+img = brick('layout/img/page3.jpg')
+plotRGB(img)
+dev.off()
+
+# merging pdfs and generating report
+pdf_combine(
+  input = c('layout/pdf/page1.pdf', 'layout/pdf/page2.pdf', 'layout/pdf/page3.pdf'),
+  output = 'report.pdf'
+)
