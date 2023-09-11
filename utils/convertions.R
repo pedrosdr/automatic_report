@@ -86,14 +86,21 @@ convertHtmlToPdf = function(
     outputPdfPath,
     widthPx,
     heightPx,
+    clipRectangle = NULL,
     outputImagePath = NULL) {
   
   if(is.null(outputImagePath)) {
     outputImagePath = outputHtmlPath = paste0(strsplit(outputPdfPath, '\\.')[[1]][1], '.jpg')
   }
   
-  convertHtmlToImage(inputHtmlPath, outputImagePath, c(0, 0, widthPx, heightPx), 
-                     widthPx = widthPx, heightPx =  heightPx)
+  if(is.null(clipRectangle)) {
+    convertHtmlToImage(inputHtmlPath, outputImagePath, c(0, 0, widthPx, heightPx), 
+                       widthPx = widthPx, heightPx =  heightPx)
+  }
+  else {
+    convertHtmlToImage(inputHtmlPath, outputImagePath, clipRectangle, 
+                       widthPx = widthPx, heightPx =  heightPx)
+  }
   convertJpegToPdf(outputImagePath, outputPdfPath, widthPx, heightPx)
 }
 
