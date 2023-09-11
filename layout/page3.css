@@ -1,13 +1,10 @@
 #section-main {
     background: linear-gradient(45deg, #8ecc86, #7bbd3e);
-    width: 1000px;
-    height: 600px;
-    padding: 50px;
 }
 
 #img-box {
-    width: 600px;
-    height: 450px;
+    width: 800px;
+    height: 500px;
     background-color: rgb(236, 236, 236);
     box-shadow: 0 0 18px #353232;
     border-radius: 10px;

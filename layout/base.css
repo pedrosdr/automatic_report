@@ -9,3 +9,10 @@
     height: auto;
     max-height: 100%;
 }
+
+#section-main {
+    width: 1280px;
+    height: 720px;
+    padding: 50px;
+    position: relative;
+}

@@ -19,9 +19,11 @@ saveGgplotAsImage = function(
     plot, 
     savePath,
     widthPx = 1000,
-    heightPx = 1000) {
+    heightPx = 1000,
+    dpi = 300) {
   
-  ggplot2::ggsave(savePath, plot, width = widthPx, height = heightPx, units = c('px'))
+  ggplot2::ggsave(savePath, plot, width = widthPx, height = heightPx, units = c('px'),
+                  dpi = dpi)
 }
 
 # saves a leaflet object as HTML
@@ -63,15 +65,19 @@ convertHtmlToImage = function(
     outputImagePath, 
     clipRectangle = NULL,
     widthPx = NULL,
-    heightPx = NULL) {
+    heightPx = NULL,
+    zoom = 1) {
   
   if(is.null(widthPx) || is.null(heightPx)) {
-    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle)
+    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle, delay = 0.6,
+                     zoom = zoom)
   }
   else {
     webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle,
                      vwidth = widthPx,
-                     vheight = heightPx)
+                     vheight = heightPx,
+                     delay = 0.6,
+                     zoom = zoom)
   }
 }
 

@@ -44,25 +44,25 @@ map
 # saving charts
 width = 900
 height = 700
-saveGgplotAsImage(chart1, 'charts/chart1.jpg', widthPx = width, heightPx = height)
-saveGgplotAsImage(chart2, 'charts/chart2.jpg', widthPx = width, heightPx = height)
-saveGgplotAsImage(chart3, 'charts/chart3.jpg', widthPx = width, heightPx = height)
+saveGgplotAsImage(chart1, 'charts/chart1.jpeg', widthPx = width, heightPx = height)
+saveGgplotAsImage(chart2, 'charts/chart2.jpeg', widthPx = width, heightPx = height)
+saveGgplotAsImage(chart3, 'charts/chart3.jpeg', widthPx = width, heightPx = height)
 
 # saving maps
-saveLeafletAsImage(map, 'charts/map.jpg', outputHtmlPath = 'maps/map.html',
-                   widthPx = 580, heightPx = 420)
+saveLeafletAsImage(map, 'charts/map.jpeg', outputHtmlPath = 'maps/map.html',
+                   widthPx = 800, heightPx = 500)
 
 # saving pages
-width = 2000
-height = 1200
-cliprect = c(0, 0, 1000, 600)
+width = 1280
+height = 720
+cliprect = c(0, 0, width, height)
 
 convertHtmlToPdf('layout/page1.html', 'layout/pdf/page1.pdf', width, height, 
-                 outputImagePath = 'layout/img/page1.jpg', clipRectangle = cliprect)
+                 outputImagePath = 'layout/img/page1.jpeg', clipRectangle = cliprect)
 convertHtmlToPdf('layout/page2.html', 'layout/pdf/page2.pdf', width, height,
-                 outputImagePath = 'layout/img/page2.jpg', clipRectangle = cliprect)
+                 outputImagePath = 'layout/img/page2.jpeg', clipRectangle = cliprect)
 convertHtmlToPdf('layout/page3.html', 'layout/pdf/page3.pdf', width, height,
-                 outputImagePath = 'layout/img/page3.jpg', clipRectangle = cliprect)
+                 outputImagePath = 'layout/img/page3.jpeg', clipRectangle = cliprect)
 
 # merging pdfs and generating report
 mergePdfs(
