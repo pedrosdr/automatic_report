@@ -1,13 +1,10 @@
+setwd('C:/Users/Lenovo/Desktop/automation')
+
 library(leaflet)
 library(dplyr)
 library(ggplot2)
-library(webshot)
-library(htmlwidgets)
-library(jpeg)
-library(raster)
-library(qpdf)
+source('utils/convertions.R')
 
-setwd('C:/Users/Lenovo/Desktop/automation')
 
 # creating dataframe
 df <- data.frame(
@@ -80,3 +77,5 @@ pdf_combine(
   input = c('layout/pdf/page1.pdf', 'layout/pdf/page2.pdf', 'layout/pdf/page3.pdf'),
   output = 'report.pdf'
 )
+
+saveLeafletAsImage(map, 'map.jpg', outputHtmlPath = 'maps/map.html')
