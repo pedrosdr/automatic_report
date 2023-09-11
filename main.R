@@ -10,8 +10,8 @@ source('utils/convertions.R')
 df <- data.frame(
   x = c(1, 2, 3, 4),
   y = c(3, 7, 5, 1),
-  lat = c(-21.82025, -21.20772, -22.97754, -23.63144),
-  lon = c(-46.55864, -50.43809, -49.86874, -46.76599)
+  lat = c(-21.15712, -21.19058, -21.21523, -21.17922),
+  lon = c(-47.79177, -47.83451, -47.79657, -47.71812)
 )
 
 # creating charts
@@ -42,40 +42,29 @@ map = leaflet(df) %>% addTiles() %>%
 map
 
 # saving charts
-ggsave('charts/chart1.jpg', chart1, units = c('px'), width = 1400, height = 1200)
-ggsave('charts/chart2.jpg', chart2, units = c('px'), width = 1400, height = 1200)
-ggsave('charts/chart3.jpg', chart3, units = c('px'), width = 1400, height = 1200)
+width = 900
+height = 700
+saveGgplotAsImage(chart1, 'charts/chart1.jpg', widthPx = width, heightPx = height)
+saveGgplotAsImage(chart2, 'charts/chart2.jpg', widthPx = width, heightPx = height)
+saveGgplotAsImage(chart3, 'charts/chart3.jpg', widthPx = width, heightPx = height)
 
 # saving maps
-saveWidget(map, 'maps/map.html')
-webshot('maps/map.html', 'charts/map.jpg')
+saveLeafletAsImage(map, 'charts/map.jpg', outputHtmlPath = 'maps/map.html',
+                   widthPx = 580, heightPx = 420)
 
 # saving pages
 width = 1000
 height = 600
-webshot('layout/page1.html', 'layout/img/page1.jpg', cliprect = c(0, 0, width, height))
-webshot('layout/page2.html', 'layout/img/page2.jpg', cliprect = c(0, 0, width, height))
-webshot('layout/page3.html', 'layout/img/page3.jpg', cliprect = c(0, 0, width, height))
 
-pdf('layout/pdf/page1.pdf', width = width/300, height = height/300)
-img = brick('layout/img/page1.jpg')
-plotRGB(img)
-dev.off()
-
-pdf('layout/pdf/page2.pdf', width = width/300, height = height/300)
-img = brick('layout/img/page2.jpg')
-plotRGB(img)
-dev.off()
-
-pdf('layout/pdf/page3.pdf', width = width/300, height = height/300)
-img = brick('layout/img/page3.jpg')
-plotRGB(img)
-dev.off()
+convertHtmlToPdf('layout/page1.html', 'layout/pdf/page1.pdf', width, height, 
+                 outputImagePath = 'layout/img/page1.jpg')
+convertHtmlToPdf('layout/page2.html', 'layout/pdf/page2.pdf', width, height,
+                 outputImagePath = 'layout/img/page2.jpg')
+convertHtmlToPdf('layout/page3.html', 'layout/pdf/page3.pdf', width, height,
+                 outputImagePath = 'layout/img/page3.jpg')
 
 # merging pdfs and generating report
-pdf_combine(
-  input = c('layout/pdf/page1.pdf', 'layout/pdf/page2.pdf', 'layout/pdf/page3.pdf'),
-  output = 'report.pdf'
+mergePdfs(
+  inputFiles = c('layout/pdf/page1.pdf', 'layout/pdf/page2.pdf', 'layout/pdf/page3.pdf'),
+  outputFile = 'report.pdf'
 )
-
-saveLeafletAsImage(map, 'map.jpg', outputHtmlPath = 'maps/map.html')

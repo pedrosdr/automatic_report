@@ -36,21 +36,65 @@ saveLeafletAsHtml = function(leafletObject, savePath) {
 ## leafletObject [list of leaflet object]: leaflet object
 ## outputImagePath [string]: output image path
 ## outputHtmlPath [string]: output html path (same folder as outputImagePath by default)
-saveLeafletAsImage = function (leafletObject, outputImagePath, outputHtmlPath = NULL) {
+## widthPx [int]: width in pixels
+## heightPx [int]: height in pixels
+saveLeafletAsImage = function (
+    leafletObject, 
+    outputImagePath, 
+    outputHtmlPath = NULL,
+    widthPx = NULL,
+    heightPx = NULL) {
   if(is.null(outputHtmlPath)){
     outputHtmlPath = paste0(strsplit(outputImagePath, '\\.')[[1]][1], '.html')
   }
   
   saveLeafletAsHtml(leafletObject, outputHtmlPath)
-  convertHtmlToImage(outputHtmlPath, outputImagePath)
+  convertHtmlToImage(outputHtmlPath, outputImagePath, widthPx = widthPx, heightPx = heightPx)
 }
 
 # converts html file to image
 ## inputHtmlPath [string]: input html file path
 ## outputImagePath [string]: output image path
 ## clipRectangle [vector: c(num, num, num, num)]: clipping rectangle, values in pixels
-convertHtmlToImage = function(inputHtmlPath, outputImagePath, clipRectangle = NULL) {
-  webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle)
+## widthPx [int]: width in pixels
+## heightPx [int]: height in pixels
+convertHtmlToImage = function(
+    inputHtmlPath, 
+    outputImagePath, 
+    clipRectangle = NULL,
+    widthPx = NULL,
+    heightPx = NULL) {
+  
+  if(is.null(widthPx) || is.null(heightPx)) {
+    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle)
+  }
+  else {
+    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle,
+                     vwidth = widthPx,
+                     vheight = heightPx)
+  }
+}
+
+# converts html file to pdf (first converts html to image and then image to pdf)
+## inputHtmlPath [string]: input html file path
+## outputPdfPath [string]: output pdf path
+## outputImagePath [string]: output image path
+## widthPx [int]: width in pixels
+## heightPx [int]: height in pixels
+convertHtmlToPdf = function(
+    inputHtmlPath, 
+    outputPdfPath,
+    widthPx,
+    heightPx,
+    outputImagePath = NULL) {
+  
+  if(is.null(outputImagePath)) {
+    outputImagePath = outputHtmlPath = paste0(strsplit(outputPdfPath, '\\.')[[1]][1], '.jpg')
+  }
+  
+  convertHtmlToImage(inputHtmlPath, outputImagePath, c(0, 0, widthPx, heightPx), 
+                     widthPx = widthPx, heightPx =  heightPx)
+  convertJpegToPdf(outputImagePath, outputPdfPath, widthPx, heightPx)
 }
 
 # converts jpeg/jpg files to pdf
@@ -64,7 +108,7 @@ convertJpegToPdf = function(
     widthPx = 1500, 
     heightPx = 1300) {
   
-  pdf(outputPdfPath, width = widthPx/300, height = heightPx/300)
+  pdf(outputPdfPath, width = widthPx/96, height = heightPx/96)
   img = raster::brick(inputJpegPath)
   raster::plotRGB(img)
   dev.off()
