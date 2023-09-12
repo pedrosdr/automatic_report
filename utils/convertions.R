@@ -3,12 +3,14 @@ if(!require(htmlwidgets)) install.packages('htmlwidgets')
 if(!require(raster)) install.packages('raster')
 if(!require(qpdf)) install.packages('qpdf')
 if(!require(ggplot2)) install.packages('ggplot2')
+if(!require(magick)) install.packages('magick')
 
 library(webshot)
 library(htmlwidgets)
 library(raster)
 library(qpdf)
 library(ggplot2)
+library(magick)
 
 # saves a ggplot object as an image
 ## plot [list of ggplot object]: ggplot object
@@ -69,14 +71,14 @@ convertHtmlToImage = function(
     zoom = 1) {
   
   if(is.null(widthPx) || is.null(heightPx)) {
-    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle, delay = 0.6,
+    webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle, delay = 0.3,
                      zoom = zoom)
   }
   else {
     webshot::webshot(inputHtmlPath, outputImagePath, cliprect = clipRectangle,
                      vwidth = widthPx,
                      vheight = heightPx,
-                     delay = 0.6,
+                     delay = 0.3,
                      zoom = zoom)
   }
 }
@@ -107,7 +109,7 @@ convertHtmlToPdf = function(
     convertHtmlToImage(inputHtmlPath, outputImagePath, clipRectangle, 
                        widthPx = widthPx, heightPx =  heightPx)
   }
-  convertJpegToPdf(outputImagePath, outputPdfPath, widthPx, heightPx)
+  convertJpegToPdf(outputImagePath, outputPdfPath)
 }
 
 # converts jpeg/jpg files to pdf
@@ -117,14 +119,10 @@ convertHtmlToPdf = function(
 ## heightPx [int]: height in pixels
 convertJpegToPdf = function(
     inputJpegPath, 
-    outputPdfPath, 
-    widthPx = 1500, 
-    heightPx = 1300) {
+    outputPdfPath) {
   
-  pdf(outputPdfPath, width = widthPx/96, height = heightPx/96)
-  img = raster::brick(inputJpegPath)
-  raster::plotRGB(img)
-  dev.off()
+  image = magick::image_read(inputJpegPath)
+  magick::image_write(image, outputPdfPath, format = 'pdf')
 }
 
 # merges pdf files
