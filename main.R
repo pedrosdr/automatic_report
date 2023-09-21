@@ -101,69 +101,62 @@ map = leaflet(df) %>% addTiles() %>%
   addProviderTiles(providers$CartoDB.Positron)
 
 # adding markers to the map
-for(i in 1:nrow(df))
-{
-  row = as.data.frame(df[i,])
-  
-  if(row$positions == 'center')
-  {
-    map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
-               label = row$lat,
-               labelOptions = labelOptions(
-                 textOnly = TRUE,
-                 noHide = TRUE,
-                 style = list("font-weight" = "700"),
-                 sticky = "bottom",
-                 direction = "center",
-               ),
-               icon = icons(
-                 iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
-                                  ifelse(row$x == 2, 'markers/orange_marker.png',
-                                         ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
-                 iconWidth = 38, iconHeight = 38,
-                 iconAnchorX = 19, iconAnchorY = 38,
-               ))
-    
-  } else if(row$positions == 'left')
-  {
-    map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
-                             label = row$lat,
-                             labelOptions = labelOptions(
-                               textOnly = TRUE,
-                               noHide = TRUE,
-                               style = list("font-weight" = "700"),
-                               sticky = "bottom",
-                               direction = "left",
-                             ),
-                             icon = icons(
-                               iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
-                                                ifelse(row$x == 2, 'markers/orange_marker.png',
-                                                       ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
-                               iconWidth = 38, iconHeight = 38,
-                               iconAnchorX = 19, iconAnchorY = 38,
-                             ))
-  } else
-  {
-    map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
-                             label = row$lat,
-                             labelOptions = labelOptions(
-                               textOnly = TRUE,
-                               noHide = TRUE,
-                               style = list("font-weight" = "700"),
-                               sticky = "bottom",
-                               direction = "right",
-                             ),
-                             icon = icons(
-                               iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
-                                                ifelse(row$x == 2, 'markers/orange_marker.png',
-                                                       ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
-                               iconWidth = 38, iconHeight = 38,
-                               iconAnchorX = 19, iconAnchorY = 38,
-                             ))
-  }
-}
+row = df %>% filter(positions == 'left')
+map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
+                         label = row$lat,
+                         labelOptions = labelOptions(
+                           textOnly = TRUE,
+                           noHide = TRUE,
+                           style = list("font-weight" = "700"),
+                           sticky = "bottom",
+                           direction = "left",
+                         ),
+                         icon = icons(
+                           iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
+                                            ifelse(row$x == 2, 'markers/orange_marker.png',
+                                                   ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
+                           iconWidth = 38, iconHeight = 38,
+                           iconAnchorX = 19, iconAnchorY = 38,
+                         )
+)
 
+row = df %>% filter(positions == 'right')
+map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
+                         label = row$lat,
+                         labelOptions = labelOptions(
+                           textOnly = TRUE,
+                           noHide = TRUE,
+                           style = list("font-weight" = "700"),
+                           sticky = "bottom",
+                           direction = "right",
+                         ),
+                         icon = icons(
+                           iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
+                                            ifelse(row$x == 2, 'markers/orange_marker.png',
+                                                   ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
+                           iconWidth = 38, iconHeight = 38,
+                           iconAnchorX = 19, iconAnchorY = 38,
+                         )
+)
 
+row = df %>% filter(positions == 'center')
+map = map %>% addMarkers(map, lng = row$lon, lat = row$lat,
+                         label = row$lat,
+                         labelOptions = labelOptions(
+                           textOnly = TRUE,
+                           noHide = TRUE,
+                           style = list("font-weight" = "700"),
+                           sticky = "bottom",
+                           direction = "center",
+                         ),
+                         icon = icons(
+                           iconUrl = ifelse(row$x == 1, 'markers/red_marker.png',
+                                            ifelse(row$x == 2, 'markers/orange_marker.png',
+                                                   ifelse(row$x == 3, 'markers/yellow_marker.png', 'markers/green_marker.png'))),
+                           iconWidth = 38, iconHeight = 38,
+                           iconAnchorX = 19, iconAnchorY = 38,
+                         )
+)
 
 
 map
