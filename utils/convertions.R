@@ -1,11 +1,11 @@
-if(!require(webshot)) install.packages('webshot')
+if(!require(webshot2)) remotes::install_github("rstudio/webshot2")
 if(!require(htmlwidgets)) install.packages('htmlwidgets')
 if(!require(raster)) install.packages('raster')
 if(!require(qpdf)) install.packages('qpdf')
 if(!require(ggplot2)) install.packages('ggplot2')
 if(!require(magick)) install.packages('magick')
 
-library(webshot)
+library(webshot2)
 library(htmlwidgets)
 library(raster)
 library(qpdf)
