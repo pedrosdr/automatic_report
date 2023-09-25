@@ -64,7 +64,7 @@ getPositions = function(d)
       lat_j = d[j, "lat"]
       lon_j = d[j, "lon"]
       
-      if(abs(lat_i - lat_j) < 0.08 && abs(lon_i - lon_j) < 0.03)
+      if(abs(lat_i - lat_j) < 0.03 && abs(lon_i - lon_j) < 0.01)
         distances_i = rbind(distances_i, c(lat_i - lat_j, lon_i - lon_j))
     }
     
@@ -74,16 +74,17 @@ getPositions = function(d)
     if(nrow(distances_i) > 0 && !is.null(distances_i))
     {
       colnames(distances_i) = c('lat_dist', 'lon_dist')
-      distances = summarise(distances_i, lat_dist = mean(lat_dist), lon_dist = mean(lon_dist))
+      pos_lons = nrow(distances_i %>% filter(lon_dist > 0))
+      neg_lons = nrow(distances_i %>% filter(lon_dist < 0))
+      pos_lats = nrow(distances_i %>% filter(lat_dist > 0))
+      neg_lats = nrow(distances_i %>% filter(lat_dist < 0))
       
-      if(distances$lon_dist <= 0 && distances$lat_dist >= 0)
-      {
-        positions = c(positions, "left")
-      } else if(distances$lon_dist > 0 && distances$lat_dist >= 0)
-      {
+      if(pos_lons > neg_lons && neg_lats < pos_lats) {
         positions = c(positions, "right")
-      } else
-      {
+      } else if(neg_lons > pos_lons && neg_lats < pos_lats) {
+        positions = c(positions, "left")
+      }
+      else {
         positions = c(positions, "center")
       }
     }
