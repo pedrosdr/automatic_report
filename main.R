@@ -14,13 +14,13 @@ source('utils/convertions.R')
 
 # creating dataframe
 df <- data.frame(
-  names = c('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-  x = c(1, 2, 3, 4, 5, 6, 7),
-  y = c(3, 7, 5, 1, 3, 3, 2),
-  z = c(2, 5, 4, 2, 9, 9, 2),
-  h = c(1, 2, 3, 1, 2, 1, 9),
-  lat = c(-21.15712, -21.19058, -21.15674, -21.17922, -21.16182, -21.16770, -21.18363),
-  lon = c(-47.79177, -47.83451, -47.79678, -47.71812, -47.79230, -47.80270, -47.71732)
+  names = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'),
+  x = c(1, 2, 3, 4, 5, 6, 7, 8, 3),
+  y = c(3, 7, 5, 1, 3, 3, 2, 9, 4),
+  z = c(2, 5, 4, 2, 9, 9, 2, 3, 5),
+  h = c(1, 2, 3, 1, 2, 1, 9, 5, 6),
+  lat = c(-21.15712, -21.19058, -21.15674, -21.17922, -21.16182, -21.16770, -21.18363, -21.19701, -21.15414),
+  lon = c(-47.79177, -47.83451, -47.79678, -47.71812, -47.79230, -47.80270, -47.71732, -47.81697, -47.78691)
 )
 
 # creating charts
@@ -51,20 +51,20 @@ getPositions = function(d)
 {
   positions = c()
   
-  for(i in 1:nrow(d)) 
+  for(i in 1:nrow(d))
   {
-    lat_i = d[i, 1]
-    lon_i = d[i, 2]
+    lat_i = d[i, "lat"]
+    lon_i = d[i, "lon"]
     
     distances_i = data.frame()
     
     for(j in 1:nrow(d)) 
     {
       if(i == j) next
-      lat_j = d[j, 1]
-      lon_j = d[j, 2]
+      lat_j = d[j, "lat"]
+      lon_j = d[j, "lon"]
       
-      if(abs(lat_i - lat_j) < 0.1 * getSpan(d) && abs(lon_i - lon_j < 0.1 * getSpan(d)))
+      if(abs(lat_i - lat_j) < 0.08 && abs(lon_i - lon_j) < 0.03)
         distances_i = rbind(distances_i, c(lat_i - lat_j, lon_i - lon_j))
     }
     
@@ -76,10 +76,10 @@ getPositions = function(d)
       colnames(distances_i) = c('lat_dist', 'lon_dist')
       distances = summarise(distances_i, lat_dist = mean(lat_dist), lon_dist = mean(lon_dist))
       
-      if(distances$lon_dist <= 0 && distances$lat >= 0)
+      if(distances$lon_dist <= 0 && distances$lat_dist >= 0)
       {
         positions = c(positions, "left")
-      } else if(distances$lon_dist > 0 && distances$lat >= 0)
+      } else if(distances$lon_dist > 0 && distances$lat_dist >= 0)
       {
         positions = c(positions, "right")
       } else
@@ -103,6 +103,14 @@ map = leaflet(df) %>% addTiles() %>%
 # adding markers to the map
 addMarkersToMap = function(map, df, direction = 'auto')
 {
+  if(nrow(df) == 0) return(map)
+  
+  offset_y = 0
+  if(direction == "center") {
+    offset_y = -8
+  } else {
+    offset_y = 8
+  }
   map = map %>% addMarkers(map, lng = df$lon, lat = df$lat,
                            label = df$lat,
                            labelOptions = labelOptions(
@@ -110,6 +118,7 @@ addMarkersToMap = function(map, df, direction = 'auto')
                              noHide = TRUE,
                              style = list("font-weight" = "700"),
                              sticky = "bottom",
+                             offset = c(0, offset_y),
                              direction = direction,
                            ),
                            icon = icons(
@@ -127,6 +136,22 @@ map = map %>% addMarkersToMap(df %>% filter(positions == 'left'), 'left')
 map = map %>% addMarkersToMap(df %>% filter(positions == 'right'), 'right')
 map = map %>% addMarkersToMap(df %>% filter(positions == 'center'), 'center')
 
+legend <- paste0(
+  "<span>",1," Escola 1","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>",
+  "<span>",2," Escola 2","</span><br>"
+)
+
+map <- map %>% addControl(
+  legend,
+  position = "bottomleft"
+)
 map
 
 # radar chart
